@@ -1,0 +1,57 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "halr9000",
+    "description": "",
+    "home_page_url": "https://halr9000.com",
+    "feed_url": "https://halr9000.com/feed.json",
+    "user_comment": "",
+    "icon": "https://halr9000.com/media/website/android-chrome-512x512.png",
+    "author": {
+        "name": "Hal Rottenberg"
+    },
+    "items": [
+        {
+            "id": "https://halr9000.com/poetic-prompt-challenge-1-a-poetic-mech/",
+            "url": "https://halr9000.com/poetic-prompt-challenge-1-a-poetic-mech/",
+            "title": "Poetic Prompt Challenge 1: A poetic mech",
+            "summary": "<p>This challenge was posted to our <a href=\"https://discord.gg/qzJdTBSHcS\">ai:1 art:1 chat:1 Discord</a>:</p>\n<p class=\"msg msg--info\">Take an image and try to recreate it by writing a poem as the prompt</p>\n<p>I started with this image, which was a random choice I'd recently created:</p>\n<figure class=\"post__image post__image--center\" ><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/3/ComfyUI_0006.webp\" alt=\"\" width=\"400\" height=\"400\" sizes=\"100vw\" srcset=\"https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-xs.webp 300w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-sm.webp 480w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-md.webp 768w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-lg.webp 1024w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-xl.webp 1360w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-2xl.webp 1600w\">\n<figcaption >Starting image</figcaption>\n</figure>\n",
+            "content_html": "<p>This challenge was posted to our <a href=\"https://discord.gg/qzJdTBSHcS\">ai:1 art:1 chat:1 Discord</a>:</p>\n<p class=\"msg msg--info\">Take an image and try to recreate it by writing a poem as the prompt</p>\n<p>I started with this image, which was a random choice I'd recently created:</p>\n<figure class=\"post__image post__image--center\" ><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/3/ComfyUI_0006.webp\" alt=\"\" width=\"400\" height=\"400\" sizes=\"100vw\" srcset=\"https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-xs.webp 300w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-sm.webp 480w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-md.webp 768w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-lg.webp 1024w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-xl.webp 1360w ,https://halr9000.com/media/posts/3/responsive/ComfyUI_0006-2xl.webp 1600w\">\n<figcaption >Starting image</figcaption>\n</figure>\n\n<p>Instead of making something locally using Stable Diffusion as I usually do, I figured this challenge would probably go best with Dall-E 3, due to its advanced prompt following skills (well, so long as you don't offend its tender sensibilities anyway).</p>\n<p>Here was my first go, which was really an accident as I hit enter before I really got anywhere with it 😀</p>\n<figure ><figure class=\"post__image post__image--center\"><img loading=\"lazy\"  src=\"https://halr9000.com/media/posts/3/2Q.png\" alt=\"\" width=\"512\" height=\"512\" sizes=\"100vw\" srcset=\"https://halr9000.com/media/posts/3/responsive/2Q-xs.png 300w ,https://halr9000.com/media/posts/3/responsive/2Q-sm.png 480w ,https://halr9000.com/media/posts/3/responsive/2Q-md.png 768w ,https://halr9000.com/media/posts/3/responsive/2Q-lg.png 1024w ,https://halr9000.com/media/posts/3/responsive/2Q-xl.png 1360w ,https://halr9000.com/media/posts/3/responsive/2Q-2xl.png 1600w\"></figure>\n<figcaption >On one fine misty spring morning, I took a walkabout </figcaption>\n</figure>\n<p>But here is the real deal, which I was quite pleased with. Check out the poem below the image.</p>\n<figure ><figure class=\"post__image post__image--center\"><img loading=\"lazy\"  src=\"https://halr9000.com/media/posts/3/poetic-mech.png\" alt=\"\" width=\"512\" height=\"512\" sizes=\"100vw\" srcset=\"https://halr9000.com/media/posts/3/responsive/poetic-mech-xs.png 300w ,https://halr9000.com/media/posts/3/responsive/poetic-mech-sm.png 480w ,https://halr9000.com/media/posts/3/responsive/poetic-mech-md.png 768w ,https://halr9000.com/media/posts/3/responsive/poetic-mech-lg.png 1024w ,https://halr9000.com/media/posts/3/responsive/poetic-mech-xl.png 1360w ,https://halr9000.com/media/posts/3/responsive/poetic-mech-2xl.png 1600w\"></figure>\n<figcaption >A poetic mech</figcaption>\n</figure>\n<p>And the poetic prompt:</p>\n<blockquote>\n<p>On one fine misty spring morning, I took a walkabout<br>Still in my silvered battle mech armor, atop my black firesuit <br>A silly sight my slim figure made, looking into the distance <br>    with a carpet bag over my shoulder!</p>\n<p>The trail ends at the grassy shore of a curving brook, edged with rocks big and small</p>\n<p>A welcoming sight in the distance! This ancient Chinese traveler <br>may soon find her rest for the eve</p>\n<p>I am met with two rustic buildings, perhaps a tavern and a farmhouse?</p>\n<p>The eaves under the upturned roof are beckoning to me</p>\n<p>The porch seems to have a chair with my name carved on it</p>\n<p>The bushes near, the mountains afar -- I am home</p>\n</blockquote>\n<p>I'm no master of meter, but this did the trick for me.</p>",
+            "author": {
+                "name": "Hal Rottenberg"
+            },
+            "tags": [
+                   "ai-art"
+            ],
+            "date_published": "2024-03-30T17:19:26-04:00",
+            "date_modified": "2024-03-30T17:19:26-04:00"
+        },
+        {
+            "id": "https://halr9000.com/some-recent-generations/",
+            "url": "https://halr9000.com/some-recent-generations/",
+            "title": "Some recent generations",
+            "content_html": "<div class=\"gallery-wrapper\"><div class=\"gallery\"  data-is-empty=\"false\" data-translation=\"Add images\" data-columns=\"3\">\n<figure class=\"gallery__item\"><a href=\"https://halr9000.com/media/posts/2/gallery/9019249c-e4c8-4bc8-bd41-dc1bd739aba3.webp\" data-size=\"256x145\"><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/2/gallery/9019249c-e4c8-4bc8-bd41-dc1bd739aba3-thumbnail.webp\" alt=\"\" width=\"256\" height=\"145\"></a></figure>\n<figure class=\"gallery__item\"><a href=\"https://halr9000.com/media/posts/2/gallery/ComfyUI_0006.webp\" data-size=\"1024x1024\"><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/2/gallery/ComfyUI_0006-thumbnail.webp\" alt=\"\" width=\"720\" height=\"720\"></a></figure>\n<figure class=\"gallery__item\"><a href=\"https://halr9000.com/media/posts/2/gallery/svd1_00005.png\" data-size=\"1024x1024\"><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/2/gallery/svd1_00005-thumbnail.png\" alt=\"\" width=\"720\" height=\"720\"></a></figure>\n<figure class=\"gallery__item\"><a href=\"https://halr9000.com/media/posts/2/gallery/file_pics_1st_upscale_00001_.png\" data-size=\"2048x2048\"><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/2/gallery/file_pics_1st_upscale_00001_-thumbnail.png\" alt=\"\" width=\"720\" height=\"720\"></a></figure>\n<figure class=\"gallery__item\"><a href=\"https://halr9000.com/media/posts/2/gallery/ComfyUI_0022.webp\" data-size=\"1344x768\"><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/2/gallery/ComfyUI_0022-thumbnail.webp\" alt=\"\" width=\"720\" height=\"411\"></a></figure>\n<figure class=\"gallery__item\"><a href=\"https://halr9000.com/media/posts/2/gallery/ComfyUI_0001.webp\" data-size=\"1344x768\"><img loading=\"lazy\" src=\"https://halr9000.com/media/posts/2/gallery/ComfyUI_0001-thumbnail.webp\" alt=\"\" width=\"720\" height=\"411\"></a></figure>\n</div></div>",
+            "author": {
+                "name": "Hal Rottenberg"
+            },
+            "tags": [
+            ],
+            "date_published": "2024-03-30T14:19:42-04:00",
+            "date_modified": "2024-03-30T14:19:42-04:00"
+        },
+        {
+            "id": "https://halr9000.com/check-out-instantid-an-amazing-photo-styler/",
+            "url": "https://halr9000.com/check-out-instantid-an-amazing-photo-styler/",
+            "title": "Check out InstantID, an amazing photo styler",
+            "summary": "This image looks like it MIGHT be someone I know in the future \"Put your face in any style\" is the claim made by the authors of the paper titled:&nbsp;InstantID : Zero-shot Identity-Preserving Generation in Seconds. You don't have to know what this means, as&hellip;",
+            "content_html": "\n    <figure class=\"post__image post__image--center\">\n      <img loading=\"lazy\" src=\"https://halr9000.com/media/posts/1/ComfyUI_0001-2.webp\" height=\"1536\" width=\"1016\" alt=\"an image processed with the InstantID technique being discussed in this article\"  sizes=\"100vw\" srcset=\"https://halr9000.com/media/posts/1/responsive/ComfyUI_0001-2-xs.webp 300w ,https://halr9000.com/media/posts/1/responsive/ComfyUI_0001-2-sm.webp 480w ,https://halr9000.com/media/posts/1/responsive/ComfyUI_0001-2-md.webp 768w ,https://halr9000.com/media/posts/1/responsive/ComfyUI_0001-2-lg.webp 1024w ,https://halr9000.com/media/posts/1/responsive/ComfyUI_0001-2-xl.webp 1360w ,https://halr9000.com/media/posts/1/responsive/ComfyUI_0001-2-2xl.webp 1600w\">\n      <figcaption>This image looks like it MIGHT be someone I know in the future</figcaption>\n    </figure>\n\n  <p>\n    \"Put your face in any style\" is the claim made by the authors of the paper titled:&nbsp;<a href=\"https://instantid.github.io/\">InstantID : Zero-shot Identity-Preserving Generation in Seconds</a>. You don't have to know what this means, as the team spent a lot of time providing examples and comparisons to previous techniques. This stuff moves so fast -- I was evaluating one of them the day before writing this article, which had also been recently introduced!&nbsp;<br>\n  </p>\n\n    <blockquote class=\"blockquote\">\n      Our model supports identity-preserving generation in high fidelity with only single reference image in any style.<br>\n<br>We can achieve competitive results as LoRAs without any training.\n    </blockquote>\n\n  <p>\n    Expect to see even more \"face cloning\" or \"selfie styling\" apps and services and features over the next few months. This stuff was already possible for most of a year, but you really needed many photos, careful preparation, and a lot of expensive GPU time to do it well. Not anymore. I have this running on my PC now, takes 30 seconds on my mid-range GPU.\n<br>\n<br>There's definitely two sides to this, as with most anything.\n  </p>\n\n  <p class=\"msg msg--warning\">\n    We are now at the point that you should not blindly trust photographic evidence without additional context or other verifiable measures!&nbsp;<br>\n  </p>\n\n  <p>\n    \n  </p>",
+            "author": {
+                "name": "Hal Rottenberg"
+            },
+            "tags": [
+                   "ai-art"
+            ],
+            "date_published": "2024-01-23T20:21:09-05:00",
+            "date_modified": "2024-03-30T12:33:05-04:00"
+        }
+    ]
+}

@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://halr9000.com/sitemap.xml
