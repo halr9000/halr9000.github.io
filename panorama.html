@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>360 Panorama Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overscroll-behavior: none;
+        }
+        #container {
+            position: relative;
+            height: 100%;
+            touch-action: none;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        #fullscreenBtn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 100;
+            padding: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #fileInput {
+            display: none;
+        }
+        #uploadBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            padding: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="info">
+            Upload a 360° panorama image
+        </div>
+        <input type="file" id="fileInput" accept="image/*">
+        <button id="uploadBtn">Upload Image</button>
+        <button id="fullscreenBtn">Fullscreen</button>
+    </div>
+
+    <script>
+        let scene, camera, renderer, texture, material, mesh;
+        let isFullscreen = false;
+        let initialPinchDistance = 0;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+            camera.target = new THREE.Vector3(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+
+            window.addEventListener('resize', onWindowResize, false);
+            document.getElementById('container').addEventListener('mousedown', onPointerStart, false);
+            document.getElementById('container').addEventListener('mousemove', onPointerMove, false);
+            document.getElementById('container').addEventListener('mouseup', onPointerEnd, false);
+            document.getElementById('container').addEventListener('touchstart', onPointerStart, false);
+            document.getElementById('container').addEventListener('touchmove', onPointerMove, false);
+            document.getElementById('container').addEventListener('touchend', onPointerEnd, false);
+            document.getElementById('container').addEventListener('wheel', onMouseWheel, { passive: false });
+            document.getElementById('container').addEventListener('click', exitFullscreen, false);
+
+            document.getElementById('uploadBtn').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+
+            document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+
+            document.getElementById('fullscreenBtn').addEventListener('click', toggleFullScreen);
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                loadTexture(e.target.result);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function loadTexture(imageSrc) {
+            if (mesh) scene.remove(mesh);
+
+            texture = new THREE.TextureLoader().load(imageSrc);
+            material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+            mesh = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), material);
+            scene.add(mesh);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        let isUserInteracting = false,
+            onPointerDownMouseX = 0, onPointerDownMouseY = 0,
+            lon = 0, onPointerDownLon = 0,
+            lat = 0, onPointerDownLat = 0,
+            phi = 0, theta = 0;
+
+        function onPointerStart(event) {
+            isUserInteracting = true;
+            const clientX = event.clientX || event.touches[0].clientX;
+            const clientY = event.clientY || event.touches[0].clientY;
+            onPointerDownMouseX = clientX;
+            onPointerDownMouseY = clientY;
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+
+            if (event.touches && event.touches.length === 2) {
+                const dx = event.touches[0].clientX - event.touches[1].clientX;
+                const dy = event.touches[0].clientY - event.touches[1].clientY;
+                initialPinchDistance = Math.sqrt(dx * dx + dy * dy);
+            }
+        }
+
+        function onPointerMove(event) {
+            if (isUserInteracting) {
+                if (event.touches && event.touches.length === 2) {
+                    // Pinch-to-zoom
+                    const dx = event.touches[0].clientX - event.touches[1].clientX;
+                    const dy = event.touches[0].clientY - event.touches[1].clientY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const pinchDelta = initialPinchDistance - distance; // Reversed the direction
+                    zoom(pinchDelta * 0.05);
+                    initialPinchDistance = distance;
+                } else {
+                    // Regular panning
+                    const clientX = event.clientX || event.touches[0].clientX;
+                    const clientY = event.clientY || event.touches[0].clientY;
+                    lon = (onPointerDownMouseX - clientX) * 0.1 + onPointerDownLon;
+                    lat = (clientY - onPointerDownMouseY) * 0.1 + onPointerDownLat;
+                }
+            }
+            event.preventDefault();
+        }
+
+        function onPointerEnd() {
+            isUserInteracting = false;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            update();
+        }
+
+        function update() {
+            lat = Math.max(-85, Math.min(85, lat));
+            phi = THREE.MathUtils.degToRad(90 - lat);
+            theta = THREE.MathUtils.degToRad(lon);
+
+            camera.target.x = 500 * Math.sin(phi) * Math.cos(theta);
+            camera.target.y = 500 * Math.cos(phi);
+            camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
+
+            camera.lookAt(camera.target);
+            renderer.render(scene, camera);
+        }
+
+        function toggleFullScreen() {
+            const container = document.getElementById('container');
+            if (!document.fullscreenElement) {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.mozRequestFullScreen) {
+                    container.mozRequestFullScreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                hideUI();
+                isFullscreen = true;
+            } else {
+                exitFullscreen();
+            }
+        }
+
+        function exitFullscreen() {
+            if (isFullscreen) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                showUI();
+                isFullscreen = false;
+            }
+        }
+
+        function hideUI() {
+            document.getElementById('info').style.display = 'none';
+            document.getElementById('uploadBtn').style.display = 'none';
+            document.getElementById('fullscreenBtn').style.display = 'none';
+        }
+
+        function showUI() {
+            document.getElementById('info').style.display = 'block';
+            document.getElementById('uploadBtn').style.display = 'block';
+            document.getElementById('fullscreenBtn').style.display = 'block';
+        }
+
+        function onMouseWheel(event) {
+            event.preventDefault();
+            zoom(event.deltaY * -0.004);
+        }
+
+        function zoom(delta) {
+            camera.fov = Math.max(30, Math.min(90, camera.fov + delta));
+            camera.updateProjectionMatrix();
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
