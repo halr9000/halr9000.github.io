@@ -13,7 +13,7 @@
             background-color: #f0f0f0;
         }
         #container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             background-color: white;
             padding: 20px;
@@ -22,9 +22,6 @@
         }
         #info {
             margin-bottom: 20px;
-        }
-        .input-group {
-            margin-bottom: 15px;
         }
         .btn {
             display: inline-flex;
@@ -45,30 +42,46 @@
             height: 400px;
             margin-top: 20px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+        .material-icons {
+            vertical-align: middle;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
     <div id="container">
         <div id="info">
             <h2>360° Panorama Viewer</h2>
-            <p>Upload a 360° panorama image or specify a URL</p>
-        </div>
-        <div class="input-group">
-            <input type="file" id="fileInput" accept="image/*" style="display: none;">
-            <button class="btn" onclick="document.getElementById('fileInput').click()">
-                <i class="material-icons">file_upload</i> Upload Image
-            </button>
-        </div>
-        <div class="input-group">
-            <input type="text" id="imageUrl" placeholder="Enter image URL">
-            <button class="btn" onclick="loadImageFromUrl()">
-                <i class="material-icons">link</i> Load URL
-            </button>
+            <p>Click on an image from the list below to view it in the panorama viewer</p>
         </div>
         <button class="btn" onclick="toggleFullscreen()">
             <i class="material-icons">fullscreen</i> Fullscreen
         </button>
         <div id="panoramaContainer"></div>
+        <table id="imageList">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Image list will be populated here -->
+            </tbody>
+        </table>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -81,10 +94,9 @@
             phi = 0, theta = 0;
 
         const container = document.getElementById('panoramaContainer');
-        const fileInput = document.getElementById('fileInput');
-        const imageUrlInput = document.getElementById('imageUrl');
 
         init();
+        loadImageList();
 
         function init() {
             camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 1, 1100);
@@ -121,6 +133,29 @@
                 scene.children[0].material.map = texture;
                 scene.children[0].material.needsUpdate = true;
                 render();
+            });
+        }
+
+        function loadImageList() {
+            // This is a mock function. In a real scenario, you'd fetch this list from the server.
+            const images = [
+                'image1.jpg',
+                'image2.png',
+                'panorama.webp',
+                'default.jpg'
+            ];
+
+            const tbody = document.querySelector('#imageList tbody');
+            images.forEach(image => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <i class="material-icons">image</i>
+                        ${image}
+                    </td>
+                `;
+                row.addEventListener('click', () => loadImage(image));
+                tbody.appendChild(row);
             });
         }
 
@@ -204,35 +239,6 @@
             camera.position.z = 500 * Math.sin(phi) * Math.sin(theta);
             camera.lookAt(scene.position);
             renderer.render(scene, camera);
-        }
-
-        // Load image from query parameter or default
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const imageParam = urlParams.get('image');
-            if (imageParam) {
-                loadImage(imageParam);
-            } else {
-                loadImage('default.jpg');
-            }
-        };
-
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    loadImage(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        function loadImageFromUrl() {
-            const url = imageUrlInput.value.trim();
-            if (url) {
-                loadImage(url);
-            }
         }
 
         function toggleFullscreen() {
