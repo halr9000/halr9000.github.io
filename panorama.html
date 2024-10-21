@@ -113,6 +113,10 @@
             container.addEventListener('touchmove', onPointerMove, false);
             container.addEventListener('touchend', onPointerUp, false);
 
+            container.addEventListener('gesturestart', onGestureStart, false);
+            container.addEventListener('gesturechange', onGestureChange, false);
+            container.addEventListener('gestureend', onGestureEnd, false);
+
             window.addEventListener('resize', onWindowResize, false);
         }
 
@@ -145,7 +149,8 @@
                 const clientX = event.clientX || event.touches[0].clientX;
                 const clientY = event.clientY || event.touches[0].clientY;
                 lon = (onPointerDownMouseX - clientX) * 0.1 + onPointerDownLon;
-                lat = (clientY - onPointerDownMouseY) * 0.1 + onPointerDownLat;
+                // Reversed up/down direction
+                lat = (onPointerDownMouseY - clientY) * 0.1 + onPointerDownLat;
                 render();
             }
         }
@@ -155,10 +160,36 @@
         }
 
         function onDocumentMouseWheel(event) {
-            const fov = camera.fov + event.deltaY * 0.05;
+            // Reversed scroll direction
+            const fov = camera.fov - event.deltaY * 0.05;
             camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
             camera.updateProjectionMatrix();
             render();
+        }
+
+        let initialPinchDistance = 0;
+        function onGestureStart(event) {
+            initialPinchDistance = Math.hypot(
+                event.touches[0].pageX - event.touches[1].pageX,
+                event.touches[0].pageY - event.touches[1].pageY
+            );
+        }
+
+        function onGestureChange(event) {
+            const currentDistance = Math.hypot(
+                event.touches[0].pageX - event.touches[1].pageX,
+                event.touches[0].pageY - event.touches[1].pageY
+            );
+            const pinchDelta = currentDistance - initialPinchDistance;
+            const fov = camera.fov - pinchDelta * 0.05;
+            camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
+            camera.updateProjectionMatrix();
+            render();
+            initialPinchDistance = currentDistance;
+        }
+
+        function onGestureEnd(event) {
+            initialPinchDistance = 0;
         }
 
         function render() {
