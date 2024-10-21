@@ -107,15 +107,11 @@
             container.addEventListener('mousemove', onPointerMove, false);
             container.addEventListener('mouseup', onPointerUp, false);
 
+            container.addEventListener('touchstart', onTouchStart, false);
+            container.addEventListener('touchmove', onTouchMove, false);
+            container.addEventListener('touchend', onTouchEnd, false);
+
             container.addEventListener('wheel', onDocumentMouseWheel, false);
-
-            container.addEventListener('touchstart', onPointerStart, false);
-            container.addEventListener('touchmove', onPointerMove, false);
-            container.addEventListener('touchend', onPointerUp, false);
-
-            container.addEventListener('gesturestart', onGestureStart, false);
-            container.addEventListener('gesturechange', onGestureChange, false);
-            container.addEventListener('gestureend', onGestureEnd, false);
 
             window.addEventListener('resize', onWindowResize, false);
         }
@@ -136,21 +132,16 @@
 
         function onPointerStart(event) {
             isUserInteracting = true;
-            const clientX = event.clientX || event.touches[0].clientX;
-            const clientY = event.clientY || event.touches[0].clientY;
-            onPointerDownMouseX = clientX;
-            onPointerDownMouseY = clientY;
+            onPointerDownMouseX = event.clientX;
+            onPointerDownMouseY = event.clientY;
             onPointerDownLon = lon;
             onPointerDownLat = lat;
         }
 
         function onPointerMove(event) {
             if (isUserInteracting) {
-                const clientX = event.clientX || event.touches[0].clientX;
-                const clientY = event.clientY || event.touches[0].clientY;
-                lon = (onPointerDownMouseX - clientX) * 0.1 + onPointerDownLon;
-                // Reversed up/down direction
-                lat = (onPointerDownMouseY - clientY) * 0.1 + onPointerDownLat;
+                lon = (onPointerDownMouseX - event.clientX) * 0.1 + onPointerDownLon;
+                lat = (onPointerDownMouseY - event.clientY) * 0.1 + onPointerDownLat;
                 render();
             }
         }
@@ -159,37 +150,49 @@
             isUserInteracting = false;
         }
 
+        let touchStartDistance = 0;
+        let touchStartFov = 0;
+
+        function onTouchStart(event) {
+            if (event.touches.length === 1) {
+                onPointerStart(event.touches[0]);
+            } else if (event.touches.length === 2) {
+                touchStartDistance = Math.hypot(
+                    event.touches[0].pageX - event.touches[1].pageX,
+                    event.touches[0].pageY - event.touches[1].pageY
+                );
+                touchStartFov = camera.fov;
+            }
+        }
+
+        function onTouchMove(event) {
+            if (event.touches.length === 1) {
+                onPointerMove(event.touches[0]);
+            } else if (event.touches.length === 2) {
+                const touchDistance = Math.hypot(
+                    event.touches[0].pageX - event.touches[1].pageX,
+                    event.touches[0].pageY - event.touches[1].pageY
+                );
+                const zoomDelta = touchDistance - touchStartDistance;
+                const newFov = touchStartFov - zoomDelta * 0.1;
+                camera.fov = THREE.MathUtils.clamp(newFov, 10, 75);
+                camera.updateProjectionMatrix();
+                render();
+            }
+        }
+
+        function onTouchEnd() {
+            isUserInteracting = false;
+            if (event.touches.length === 1) {
+                onPointerStart(event.touches[0]);
+            }
+        }
+
         function onDocumentMouseWheel(event) {
-            // Reversed scroll direction
             const fov = camera.fov - event.deltaY * 0.05;
             camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
             camera.updateProjectionMatrix();
             render();
-        }
-
-        let initialPinchDistance = 0;
-        function onGestureStart(event) {
-            initialPinchDistance = Math.hypot(
-                event.touches[0].pageX - event.touches[1].pageX,
-                event.touches[0].pageY - event.touches[1].pageY
-            );
-        }
-
-        function onGestureChange(event) {
-            const currentDistance = Math.hypot(
-                event.touches[0].pageX - event.touches[1].pageX,
-                event.touches[0].pageY - event.touches[1].pageY
-            );
-            const pinchDelta = currentDistance - initialPinchDistance;
-            const fov = camera.fov - pinchDelta * 0.05;
-            camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
-            camera.updateProjectionMatrix();
-            render();
-            initialPinchDistance = currentDistance;
-        }
-
-        function onGestureEnd(event) {
-            initialPinchDistance = 0;
         }
 
         function render() {
