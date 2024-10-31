@@ -2,8 +2,10 @@ import React, { useState } from 'react';
     import PhotoSphereViewer from 'photo-sphere-viewer';
 
     const images = [
-      '/images/photo1.jpg',
-      '/images/photo2.jpg',
+      '/images/photo1.webp',
+      '/images/photo2.webp',
+      '/images/photo3.webp',
+      '/images/photo4.webp'
       // Add more image paths here
     ];
 
