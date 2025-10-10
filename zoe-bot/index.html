@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Sphero Mini Robot Simulator" property="og:title"/>
+<meta content="Interactive 3D simulation of Zoe's Sphero Mini robot executing a block program with timeouts." property="og:description"/>
+<meta content="assets/img_64x64_4a09d6ec.png" property="og:image"/>
+<meta content="website" property="og:type"/>
+<title>Sphero Mini Robot Simulator</title>
+<link href="assets/img_32x32_d4253cc0.png" rel="icon"/>
+<script src="assets/script_75da3131.js"></script>
+<script src="assets/script_4567dc42.js"></script>
+<script src="assets/script_b7883dfe.js"></script>
+<script>
+                window.load_data_from_csv = (filename) => {
+                    // Implementation needed when code is downloaded
+                };
+
+                window.save_data_to_csv = (filename, data) => {
+                    // Implementation needed when code is downloaded
+                };
+
+                window.call_llm = (system_prompt, user_messages, json_fields) => {
+                    // Implementation needed when code is downloaded
+                };
+            </script></head>
+<body class="bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 min-h-screen overflow-x-hidden">
+<div class="w-full min-h-screen flex flex-col">
+<div class="text-center py-4 px-2">
+<h1 class="text-3xl md:text-5xl font-bold text-white mb-1">Sphero Mini Simulator</h1>
+<p class="text-sm md:text-xl text-purple-300">Zoe's Block Program Execution</p>
+</div>
+<div class="flex-1 flex flex-col lg:flex-row gap-4 p-2 md:p-4 overflow-hidden">
+<!-- Left Panel - Program Steps -->
+<div class="w-full lg:w-80 flex-shrink-0">
+<div class="bg-gray-900 bg-opacity-95 rounded-xl shadow-2xl p-3 md:p-4 border-2 border-purple-400 h-full max-h-96 lg:max-h-full overflow-y-auto">
+<h3 class="text-sm md:text-base font-bold text-purple-300 mb-3 flex items-center">
+<i class="fas fa-code mr-2"></i> Program Steps
+                    </h3>
+<div class="space-y-1 text-white font-mono text-xs">
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-1">1. start program</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-2">2. clear display</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-3">3. spin 69.2°</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-4">4. roll 0° speed 142</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-5">5. roll 269° speed 118</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-6">6. set dice random</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-7">7. loop dice times</div>
+<div class="bg-gray-800 p-2 rounded ml-4 transition-all duration-300" id="step-8">8. display animation</div>
+<div class="bg-gray-800 p-2 rounded ml-4 transition-all duration-300" id="step-9">9. delay 1.5s</div>
+<div class="bg-gray-800 p-2 rounded ml-4 transition-all duration-300" id="step-10">10. clear display</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-11">11. play sound</div>
+<div class="bg-gray-800 p-2 rounded transition-all duration-300" id="step-12">12. exit program</div>
+</div>
+</div>
+</div>
+<!-- Right Panel - 3D View and Controls -->
+<div class="flex-1 flex flex-col gap-4 min-h-0">
+<!-- 3D Canvas -->
+<div class="relative flex-1 min-h-[400px] lg:min-h-0">
+<div class="bg-black rounded-2xl shadow-2xl overflow-hidden border-4 border-purple-500 relative w-full h-full" id="canvas-container">
+<canvas id="robotCanvas"></canvas>
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white opacity-0 transition-all duration-500 pointer-events-none" id="dice-display">
+<div class="bg-white text-black rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border-4 md:border-8 border-yellow-400">
+<span class="text-6xl md:text-9xl font-bold" id="dice-value">6</span>
+</div>
+</div>
+<div class="absolute top-2 right-2 flex gap-2">
+<button class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-2 px-4 md:py-3 md:px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base" id="startBtn">
+<i class="fas fa-play mr-1 md:mr-2"></i> Start
+                            </button>
+<button class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-2 px-4 md:py-3 md:px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base" id="resetBtn">
+<i class="fas fa-redo mr-1 md:mr-2"></i> Reset
+                            </button>
+</div>
+</div>
+</div>
+<!-- Status and Log -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+<div class="bg-gray-800 rounded-xl shadow-xl p-3 md:p-4 border-2 border-blue-500">
+<h3 class="text-sm md:text-lg font-bold text-purple-300 mb-2">Program Status</h3>
+<div class="text-white text-xs md:text-sm" id="status">Ready to start</div>
+</div>
+<div class="bg-gray-800 rounded-xl shadow-xl p-3 md:p-4 border-2 border-pink-500">
+<h3 class="text-sm md:text-lg font-bold text-blue-300 mb-2">Execution Log</h3>
+<div class="text-white text-xs space-y-1 max-h-24 md:max-h-32 overflow-y-auto" id="log">
+<div class="text-gray-400">Waiting for program start...</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<link href="assets/style_88e216ed.css" rel="stylesheet"/>
+<script src="assets/script_812ec9a1.js"></script>
+<style>
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            src: url('/chat/webfonts/fa-regular-400.woff2') format('woff2'),
+                url('/chat/webfonts/fa-regular-400.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            src: url('/chat/webfonts/fa-solid-900.woff2') format('woff2'),
+                url('/chat/webfonts/fa-solid-900.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Font Awesome 6 Brands';
+            src: url('/chat/webfonts/fa-brands-400.woff2') format('woff2'),
+                url('/chat/webfonts/fa-brands-400.ttf') format('truetype');
+        }
+
+        #log::-webkit-scrollbar { width: 6px; }
+        #log::-webkit-scrollbar-track { background: #374151; border-radius: 3px; }
+        #log::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 3px; }
+
+        .step-active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+        }
+        .step-completed { background: #10b981 !important; opacity: 0.7; }
+        .step-timed-out { background: #ef4444 !important; opacity: 0.8; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); } 10% { transform: translate(-2px, 1px); }
+            20% { transform: translate(2px, -1px); } 30% { transform: translate(-2px, -1px); }
+            40% { transform: translate(2px, 1px); } 50% { transform: translate(-2px, -1px); }
+            60% { transform: translate(2px, 1px); } 70% { transform: translate(-2px, -1px); }
+            80% { transform: translate(2px, 1px); } 90% { transform: translate(-2px, -1px); }
+        }
+        .shaking { animation: shake 0.5s infinite; }
+        html, body { height: 100%; overflow-x: hidden; }
+    </style>
+<script>
+        let scene, camera, renderer, robot, floor;
+        let isRunning = false;
+
+        const rollSound = new Audio('https://cdn.simulationtheory.ai/gasset/?asset=sound&prompt=robot rolling mechanical sound');
+        const diceSound = new Audio('https://cdn.simulationtheory.ai/gasset/?asset=sound&prompt=dice rolling on table');
+        const beepSound = new Audio('https://cdn.simulationtheory.ai/gasset/?asset=sound&prompt=robot beep notification');
+
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            const canvas = document.getElementById('robotCanvas');
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a2e);
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 8, 10);
+            camera.lookAt(0, 0, 0);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            const floorGeometry = new THREE.PlaneGeometry(20, 20);
+            const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x2d3748, roughness: 0.8, metalness: 0.2 });
+            floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            scene.add(floor);
+            const gridHelper = new THREE.GridHelper(20, 20, 0x4a5568, 0x2d3748);
+            scene.add(gridHelper);
+            const robotGroup = new THREE.Group();
+            const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.7, roughness: 0.3, emissive: 0x4444ff, emissiveIntensity: 0.3 });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphere.castShadow = true;
+            robotGroup.add(sphere);
+            robotGroup.position.y = 0.5;
+            scene.add(robotGroup);
+            robot = robotGroup;
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            TWEEN.update();
+            renderer.render(scene, camera);
+        }
+
+        function highlightStep(stepNum, status = 'active') {
+            const stepEl = document.getElementById(`step-${stepNum}`);
+            if (stepEl) {
+                stepEl.classList.remove('step-active', 'step-completed', 'step-timed-out');
+                if (status === 'active') stepEl.classList.add('step-active');
+                else if (status === 'completed') stepEl.classList.add('step-completed');
+                else if (status === 'timed-out') stepEl.classList.add('step-timed-out');
+                stepEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function clearAllSteps() {
+            for (let i = 1; i <= 12; i++) {
+                const stepEl = document.getElementById(`step-${i}`);
+                if (stepEl) stepEl.classList.remove('step-active', 'step-completed', 'step-timed-out');
+            }
+        }
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            const color = type === 'error' ? 'text-red-400' : 'text-green-400';
+            entry.className = color;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(status) { document.getElementById('status').textContent = status; }
+        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+        function addShake() { document.getElementById('canvas-container').classList.add('shaking'); }
+        function removeShake() { document.getElementById('canvas-container').classList.remove('shaking'); }
+
+        async function withTimeout(promise, ms, stepNum) {
+            return new Promise((resolve, reject) => {
+                const timer = setTimeout(() => {
+                    highlightStep(stepNum, 'timed-out');
+                    reject(new Error(`Step ${stepNum} timed out`));
+                }, ms);
+
+                promise.then(value => {
+                    clearTimeout(timer);
+                    resolve(value);
+                }).catch(reason => {
+                    clearTimeout(timer);
+                    reject(reason);
+                });
+            });
+        }
+
+        async function clearDisplay() {
+            updateStatus('Clearing display');
+            document.getElementById('dice-display').style.opacity = '0';
+            return sleep(300);
+        }
+
+        async function spin(degrees, duration) {
+            updateStatus(`Spinning ${degrees}°`);
+            addShake();
+            rollSound.play().catch(e => {});
+            const radians = (degrees * Math.PI) / 180;
+            return new Promise(resolve => {
+                new TWEEN.Tween({ rotation: robot.rotation.y })
+                    .to({ rotation: robot.rotation.y + radians }, duration * 1000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .onUpdate(obj => { robot.rotation.y = obj.rotation; })
+                    .onComplete(() => { removeShake(); resolve(); })
+                    .start();
+            });
+        }
+
+        async function roll(angle, speed, duration) {
+            updateStatus(`Rolling at ${angle}°`);
+            addShake();
+            rollSound.play().catch(e => {});
+            const radians = (angle * Math.PI) / 180;
+            const distance = (speed / 100) * 3;
+            const endX = robot.position.x + Math.sin(radians) * distance;
+            const endZ = robot.position.z + Math.cos(radians) * distance;
+            return new Promise(resolve => {
+                new TWEEN.Tween(robot.position)
+                    .to({ x: endX, z: endZ }, duration * 1000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .onComplete(() => { removeShake(); resolve(); })
+                    .start();
+            });
+        }
+
+        async function displayDiceLoop(value, times) {
+            const diceDisplay = document.getElementById('dice-display');
+            const diceValueEl = document.getElementById('dice-value');
+            for (let i = 0; i < times; i++) {
+                if (!isRunning) return;
+                highlightStep(7, 'active');
+                log(`Loop iteration ${i + 1}/${times}`);
+                highlightStep(8, 'active');
+                updateStatus(`Showing dice: ${value} (${i + 1}/${times})`);
+                diceSound.play().catch(e => {});
+                diceValueEl.textContent = value;
+                diceDisplay.style.opacity = '1';
+                await sleep(1000);
+                highlightStep(8, 'completed');
+                highlightStep(9, 'active');
+                await sleep(1500);
+                highlightStep(9, 'completed');
+                highlightStep(10, 'active');
+                await clearDisplay();
+                highlightStep(10, 'completed');
+                highlightStep(7, 'completed');
+            }
+        }
+
+        async function playRandomSound() {
+            updateStatus('Playing sound');
+            const sounds = ['https://cdn.simulationtheory.ai/gasset/?asset=sound&prompt=happy robot beep', 'https://cdn.simulationtheory.ai/gasset/?asset=sound&prompt=robot success chime'];
+            new Audio(sounds[Math.floor(Math.random() * sounds.length)]).play().catch(e => {});
+            return sleep(1000);
+        }
+        
+        async function executeStep(stepNum, promise, timeout = 5000) {
+            if (!isRunning) return;
+            highlightStep(stepNum, 'active');
+            log(`Executing step ${stepNum}...`);
+            try {
+                await withTimeout(promise, timeout, stepNum);
+                highlightStep(stepNum, 'completed');
+            } catch (error) {
+                log(error.message, 'error');
+                updateStatus(`Error on step ${stepNum}, moving on.`);
+            }
+        }
+
+        async function runProgram() {
+            if (isRunning) return;
+            isRunning = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('log').innerHTML = '';
+            clearAllSteps();
+
+            try {
+                highlightStep(1, 'active');
+                log('=== PROGRAM START ===');
+                updateStatus('Program running');
+                await sleep(500);
+                highlightStep(1, 'completed');
+
+                await executeStep(2, clearDisplay());
+                await executeStep(3, spin(69.2, 0.5));
+                await executeStep(4, roll(0, 142, 0.5));
+                await executeStep(5, roll(269, 118, 0.5));
+
+                highlightStep(6, 'active');
+                const diceValue = Math.floor(Math.random() * 6) + 1;
+                log(`Dice rolled: ${diceValue}`);
+                updateStatus(`Dice value: ${diceValue}`);
+                await sleep(500);
+                highlightStep(6, 'completed');
+                
+                // The loop has its own internal highlighting, so we use a larger timeout
+                await executeStep(7, displayDiceLoop(diceValue, diceValue), 30000);
+
+                await executeStep(11, playRandomSound());
+
+                highlightStep(12, 'active');
+                log('=== PROGRAM EXIT ===');
+                updateStatus('Program completed');
+                beepSound.play().catch(e => {});
+                await sleep(500);
+                highlightStep(12, 'completed');
+
+            } catch (error) {
+                log(`An unexpected error occurred: ${error.message}`, 'error');
+                updateStatus('Fatal error occurred');
+            } finally {
+                isRunning = false;
+                document.getElementById('startBtn').disabled = false;
+                removeShake();
+            }
+        }
+
+        function resetSimulation() {
+            isRunning = false;
+            log('=== RESET ===');
+            updateStatus('Ready to start');
+            robot.position.set(0, 0.5, 0);
+            robot.rotation.set(0, 0, 0);
+            document.getElementById('dice-display').style.opacity = '0';
+            clearAllSteps();
+            removeShake();
+            TWEEN.removeAll();
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        window.addEventListener('load', () => {
+            initThreeJS();
+            document.getElementById('startBtn').addEventListener('click', runProgram);
+            document.getElementById('resetBtn').addEventListener('click', resetSimulation);
+            window.addEventListener('resize', () => {
+                const container = document.getElementById('canvas-container');
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        });
+    </script>
+</body>
+</html>
