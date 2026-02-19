@@ -28,12 +28,35 @@
             color: white;
             text-align: center;
         }
+
+        #ar-button {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 24px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #ar-button:active {
+            background: rgba(220, 220, 220, 0.95);
+        }
     </style>
 </head>
 
 <body>
 
-    <model-viewer id="viewer" camera-controls touch-action="pan-y" auto-rotate ar shadow-intensity="1">
+    <model-viewer id="viewer" camera-controls touch-action="pan-y" auto-rotate shadow-intensity="1" ar
+        ar-modes="webxr scene-viewer quick-look" ar-placement="wall">
+        <button slot="ar-button" id="ar-button">
+            👁 View in AR
+        </button>
     </model-viewer>
 
     <div id="error-msg">
