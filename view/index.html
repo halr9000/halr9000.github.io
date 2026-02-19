@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Viewer</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: sans-serif;
+        }
+
+        model-viewer {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #error-msg {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <model-viewer id="viewer" camera-controls touch-action="pan-y" auto-rotate ar shadow-intensity="1">
+    </model-viewer>
+
+    <div id="error-msg">
+        <h2>Model not found</h2>
+        <p>Please check the URL.</p>
+    </div>
+
+    <script>
+        const viewer = document.getElementById('viewer');
+        const errorMsg = document.getElementById('error-msg');
+
+        // Get model name from URL parameter 'model'
+        const urlParams = new URLSearchParams(window.location.search);
+        const modelName = urlParams.get('model');
+
+        if (modelName) {
+            // Construct path - assuming models are in a 'media' subfolder in the root directory
+            // So if we are at /view/index.html, models are at ../media/modelName.glb
+            const modelPath = `../media/${modelName}.glb`;
+
+            viewer.src = modelPath;
+            viewer.alt = `3D model of ${modelName}`;
+            document.title = `Viewing: ${modelName}`;
+
+            viewer.addEventListener('error', (e) => {
+                console.error('Error loading model:', e);
+                viewer.style.display = 'none';
+                errorMsg.style.display = 'block';
+                errorMsg.querySelector('p').textContent = `Could not load ${modelPath}`;
+            });
+        } else {
+            viewer.style.display = 'none';
+            errorMsg.style.display = 'block';
+            errorMsg.querySelector('p').textContent = 'No model specified in URL';
+        }
+    </script>
+
+</body>
+
+</html>
