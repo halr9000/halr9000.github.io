@@ -29,23 +29,28 @@
             text-align: center;
         }
 
+        /* Manual AR button - outside model-viewer, shown after model loads */
         #ar-button {
-            position: absolute;
+            display: none;
+            position: fixed;
             bottom: 24px;
             right: 24px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             border: none;
             border-radius: 24px;
-            padding: 10px 20px;
+            padding: 12px 22px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            z-index: 100;
             -webkit-tap-highlight-color: transparent;
+            text-decoration: none;
+            color: #000;
         }
 
         #ar-button:active {
-            background: rgba(220, 220, 220, 0.95);
+            background: rgba(210, 210, 210, 0.98);
         }
     </style>
 </head>
@@ -54,9 +59,6 @@
 
     <model-viewer id="viewer" camera-controls touch-action="pan-y" auto-rotate shadow-intensity="1" ar
         ar-modes="webxr scene-viewer quick-look" ar-placement="wall">
-        <button slot="ar-button" id="ar-button">
-            👁 View in AR
-        </button>
     </model-viewer>
 
     <div id="error-msg">
@@ -64,22 +66,63 @@
         <p>Please check the URL.</p>
     </div>
 
+    <!-- Manual AR button rendered outside model-viewer for reliability -->
+    <a id="ar-button" href="#" target="_blank">👁 View in AR</a>
+
     <script>
         const viewer = document.getElementById('viewer');
         const errorMsg = document.getElementById('error-msg');
+        const arButton = document.getElementById('ar-button');
 
-        // Get model name from URL parameter 'model'
         const urlParams = new URLSearchParams(window.location.search);
         const modelName = urlParams.get('model');
 
         if (modelName) {
-            // Construct path - assuming models are in a 'media' subfolder in the root directory
-            // So if we are at /view/index.html, models are at ../media/modelName.glb
-            const modelPath = `../media/${modelName}.glb`;
+            // Use an absolute URL — required for Android Scene Viewer and iOS Quick Look
+            const origin = window.location.origin;
+            const basePath = window.location.pathname.replace(/\/view\/?.*$/, '');
+            const modelPath = `${origin}${basePath}/media/${modelName}.glb`;
 
             viewer.src = modelPath;
             viewer.alt = `3D model of ${modelName}`;
             document.title = `Viewing: ${modelName}`;
+
+            // Build Scene Viewer intent URL for Android
+            const sceneViewerUrl =
+                `intent://arvr.google.com/scene-viewer/1.0` +
+                `?file=${encodeURIComponent(modelPath)}` +
+                `&mode=ar_preferred` +
+                `&title=${encodeURIComponent(modelName)}` +
+                `&placement=wall` +
+                `#Intent;scheme=https;` +
+                `package=com.google.android.googlequicksearchbox;` +
+                `action=android.intent.action.VIEW;` +
+                `S.browser_fallback_url=${encodeURIComponent('https://developers.google.com/ar')};end;`;
+
+            // Show AR button once model has loaded, with the right URL per platform
+            viewer.addEventListener('load', () => {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                const isAndroid = /Android/.test(navigator.userAgent);
+
+                if (isIOS) {
+                    // iOS: use Quick Look via a direct link with rel="ar"
+                    arButton.href = modelPath;
+                    arButton.setAttribute('rel', 'ar');
+                    arButton.style.display = 'block';
+                } else if (isAndroid) {
+                    // Android: use Scene Viewer intent
+                    arButton.href = sceneViewerUrl;
+                    arButton.style.display = 'block';
+                } else {
+                    // Desktop: show a dimmed hint
+                    arButton.style.display = 'block';
+                    arButton.textContent = '📱 AR on mobile only';
+                    arButton.style.opacity = '0.5';
+                    arButton.style.cursor = 'default';
+                    arButton.href = '#';
+                    arButton.addEventListener('click', e => e.preventDefault());
+                }
+            });
 
             viewer.addEventListener('error', (e) => {
                 console.error('Error loading model:', e);
@@ -87,6 +130,7 @@
                 errorMsg.style.display = 'block';
                 errorMsg.querySelector('p').textContent = `Could not load ${modelPath}`;
             });
+
         } else {
             viewer.style.display = 'none';
             errorMsg.style.display = 'block';
